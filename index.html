@@ -448,7 +448,7 @@ footer{padding:2.2rem clamp(1.6rem,5vw,5.4rem); font-size:.74rem; color:var(--in
 
 <div class="mobile-bar">
   <span class="brand-name">El Mehdi Cherki</span>
-  <button onclick="window.print()">Imprimer / PDF</button>
+  <button onclick="safePrint()">Imprimer / PDF</button>
 </div>
 
 <div class="shell">
@@ -482,7 +482,7 @@ footer{padding:2.2rem clamp(1.6rem,5vw,5.4rem); font-size:.74rem; color:var(--in
     </nav>
 
     <div class="side-foot">
-      <button class="print-btn" onclick="window.print()">
+      <button class="print-btn" onclick="safePrint()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         Version imprimable
       </button>
@@ -500,15 +500,16 @@ footer{padding:2.2rem clamp(1.6rem,5vw,5.4rem); font-size:.74rem; color:var(--in
       <div class="blob blob-3" data-depth="80"></div>
       <div class="hero-flex">
         <div class="hero-text">
-          <div class="hero-kicker eyebrow">Profil académique</div>
+          <div class="hero-kicker eyebrow">Profil académique &amp; professionnel de Monsieur El Mehdi Cherki</div>
           <h1>El Mehdi <em>Cherki</em></h1>
-          <div class="hero-role">Management des Systèmes d'Information Intelligents · Gouvernance publique &amp; hospitalière · Machine Learning appliqué</div>
+          <div class="hero-role">Management des Systèmes d'Information Intelligents</div>
           <p class="hero-lede">
-            Technicien de l'audit interne au CHU Mohammed VI d'Oujda depuis 2019, et titulaire d'un Master d'Excellence
-            en Management des Systèmes d'Information Intelligents. Mon mémoire de fin d'études articule diagnostic
-            organisationnel, gouvernance de la commande publique et co-construction d'un système de suivi intelligent
-            et auditable (OCR / Machine Learning) en milieu hospitalier. Je candidate à un doctorat à l'intersection
-            des systèmes d'information intelligents, de l'auditabilité algorithmique et de la performance publique.
+            Praticien en audit interne et contrôle de gestion au sein du CHU Mohammed VI d'Oujda depuis 2019, et titulaire
+            d'un Master d'Excellence en Management des Systèmes d'Information Intelligents. Mon mémoire de fin d'études
+            articule diagnostic organisationnel, gouvernance de la commande publique et co-construction d'un système
+            de suivi intelligent et auditable (OCR / Machine Learning) en milieu hospitalier. Je candidate à un doctorat
+            en sciences de gestion, en management des systèmes d'information intelligents, ou dans toute discipline proche
+            de ces domaines.
           </p>
           <div class="hero-cta">
             <a href="#memoire" class="btn btn-primary">Voir le mémoire de recherche →</a>
@@ -795,7 +796,6 @@ footer{padding:2.2rem clamp(1.6rem,5vw,5.4rem); font-size:.74rem; color:var(--in
       <div class="section-head">
         <div class="eyebrow">Étude de cas — recherche &amp; ingénierie</div>
         <h2 class="section-title">Projet applicatif SII-ML CHU</h2>
-        <p class="section-intro">Preuve de concept logicielle adossée au mémoire : pipeline de traitement documentaire OCR/ML, développé et testé.</p>
       </div>
 
       <div class="pipeline">
@@ -1118,6 +1118,22 @@ const DOC_DATA = {"master_attestation": "data:image/jpeg;base64,/9j/4AAQSkZJRgAB
 </script>
 
 <script>
+// ---- safe print (handles sandboxed preview iframes where window.print may be blocked) ----
+function safePrint(){
+  try{
+    if (window.top !== window.self) {
+      // Likely embedded in a sandboxed preview (e.g. Claude artifact iframe)
+      window.print();
+      // If print silently does nothing in ~400ms in some sandboxes, we can't reliably detect it,
+      // so we also offer the direct-open fallback proactively via the catch below on failure.
+    } else {
+      window.print();
+    }
+  }catch(e){
+    alert("L'impression n'est pas disponible dans cet aperçu intégré.\n\nOuvrez ce fichier HTML directement dans un onglet de navigateur (double-clic sur le fichier téléchargé, ou clic droit → Ouvrir dans un nouvel onglet), puis utilisez Ctrl/Cmd + P pour l'enregistrer en PDF.");
+  }
+}
+
 // ---- scrollspy ----
 const links = document.querySelectorAll('.sidenav a');
 const sections = [...links].map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
